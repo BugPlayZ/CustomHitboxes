@@ -1,0 +1,10 @@
+{
+  "uuid": "%uuid%",
+  "name": "Custom Hitboxes",
+  "mainClass": "com.teamsentac.customhitbox.CustomHitBox",
+  "description": "Use custom colors for your hitboxes!",
+  "version": 1,
+  "category": 2,
+  "author": "BugPlayZ",
+  "icon": "https://i.imgur.com/pZgaV6p.png"
+}
