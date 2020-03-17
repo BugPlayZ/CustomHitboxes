@@ -3,6 +3,7 @@ package com.teamsentac.customhitbox;
 import java.util.ArrayList;
 
 import net.labymod.api.events.RenderEntityEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemHangingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -21,96 +24,6 @@ public class HitBoxRender implements RenderEntityEvent {
 
 	
 	private ArrayList<Entity> PlayerList = new ArrayList<Entity>();
-	
-    public void renderLiving(RenderLivingEvent.Pre e) {
-		Entity entity = e.entity;
-		double x = e.x;
-		double y = e.y;
-		double z = e.z;
-			if(entity instanceof EntityPlayer) {
-				int red = CustomHitBox.pRED.getValue();
-				int green = CustomHitBox.pGREEN.getValue();
-				int blue = CustomHitBox.pBLUE.getValue();
-				int alpha = CustomHitBox.pALPHA.getValue();
-				if(CustomHitBox.enabled)
-					if(!CustomHitBox.custom)
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					else {
-						red = CustomHitBox.pcRED.getValue();
-						green = CustomHitBox.pcGREEN.getValue();
-						blue = CustomHitBox.pcBLUE.getValue();
-						alpha = CustomHitBox.pcALPHA.getValue();
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					}
-			}else if(entity instanceof EntityItem) {
-				int red = CustomHitBox.ieRED.getValue();
-				int green = CustomHitBox.ieGREEN.getValue();
-				int blue = CustomHitBox.ieBLUE.getValue();
-				int alpha = CustomHitBox.ieALPHA.getValue();
-				if(CustomHitBox.enabled) {
-					if(!CustomHitBox.custom)
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					else {
-						red = CustomHitBox.iecRED.getValue();
-						green = CustomHitBox.iecGREEN.getValue();
-						blue = CustomHitBox.iecBLUE.getValue();
-						alpha = CustomHitBox.iecALPHA.getValue();
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					}
-				}
-			}else if(entity.isInvisible()) {
-				int red = CustomHitBox.invisRED.getValue();
-				int green = CustomHitBox.invisGREEN.getValue();
-				int blue = CustomHitBox.invisBLUE.getValue();
-				int alpha = CustomHitBox.invisALPHA.getValue();
-				if(CustomHitBox.enabled)
-					if(!CustomHitBox.custom)
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					else {
-						red = CustomHitBox.inviscRED.getValue();
-						green = CustomHitBox.inviscGREEN.getValue();
-						blue = CustomHitBox.inviscBLUE.getValue();
-						alpha = CustomHitBox.inviscALPHA.getValue();
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					
-					}
-			}else {
-				int red = CustomHitBox.oeRED.getValue();
-				int green = CustomHitBox.oeGREEN.getValue();
-				int blue = CustomHitBox.oeBLUE.getValue();
-				int alpha = CustomHitBox.oeALPHA.getValue();
-				if(CustomHitBox.enabled) {
-					if(!CustomHitBox.custom)
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					else {
-						red = CustomHitBox.oecRED.getValue();
-						green = CustomHitBox.oecGREEN.getValue();
-						blue = CustomHitBox.oecBLUE.getValue();
-						alpha = CustomHitBox.oecALPHA.getValue();
-						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-					}
-				}
-			}
-		
-	}
-	
-	@SubscribeEvent
-    public void renderplayer(RenderPlayerEvent.Pre e) {
-		int red = CustomHitBox.RED.getValue();
-		int green = CustomHitBox.GREEN.getValue();
-		int blue = CustomHitBox.BLUE.getValue();
-		int alpha = CustomHitBox.ALPHA.getValue();
-		if(CustomHitBox.enabled)
-			if(!CustomHitBox.custom)
-				renderBoundingBox(e.entityPlayer, e.x, e.y, e.z, red, green, blue, alpha);
-			else {
-				red = CustomHitBox.cRED.getValue();
-				green = CustomHitBox.cGREEN.getValue();
-				blue = CustomHitBox.cBLUE.getValue();
-				alpha = CustomHitBox.cALPHA.getValue();
-				renderBoundingBox(e.entityPlayer, e.x, e.y, e.z, red, green, blue, alpha);
-			}
-    }
 
     private void renderBoundingBox(Entity entity, double x, double y, double z, int red, int green, int blue, int alpha)
     {
@@ -140,20 +53,23 @@ public class HitBoxRender implements RenderEntityEvent {
 	@Override
 	public void onRender(Entity entity, double x, double y, double z, float arg4) {
 		if(entity instanceof EntityPlayer) {
-			int red = CustomHitBox.pRED.getValue();
-			int green = CustomHitBox.pGREEN.getValue();
-			int blue = CustomHitBox.pBLUE.getValue();
-			int alpha = CustomHitBox.pALPHA.getValue();
-			if(CustomHitBox.enabled)
-				if(!CustomHitBox.custom)
-					renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-				else {
-					red = CustomHitBox.pcRED.getValue();
-					green = CustomHitBox.pcGREEN.getValue();
-					blue = CustomHitBox.pcBLUE.getValue();
-					alpha = CustomHitBox.pcALPHA.getValue();
-					renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
-				}
+			EntityPlayer player = (EntityPlayer) entity;
+			if(!player.isPotionActive(Potion.invisibility.getId()) && !player.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)) {
+				int red = CustomHitBox.pRED.getValue();
+				int green = CustomHitBox.pGREEN.getValue();
+				int blue = CustomHitBox.pBLUE.getValue();
+				int alpha = CustomHitBox.pALPHA.getValue();
+				if(CustomHitBox.enabled)
+					if(!CustomHitBox.custom)
+						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
+					else {
+						red = CustomHitBox.pcRED.getValue();
+						green = CustomHitBox.pcGREEN.getValue();
+						blue = CustomHitBox.pcBLUE.getValue();
+						alpha = CustomHitBox.pcALPHA.getValue();
+						renderBoundingBox(entity, x, y, z, red, green, blue, alpha);
+					}
+			}
 		}else if(entity instanceof EntityItem) {
 			int red = CustomHitBox.ieRED.getValue();
 			int green = CustomHitBox.ieGREEN.getValue();
