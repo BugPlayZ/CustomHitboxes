@@ -1,0 +1,10 @@
+{
+  "uuid": "%uuid%",
+  "name": "CustomHitBoxes",
+  "mainClass": "net.vatality.customhitboxes.CustomHitBoxesAddon",
+  "description": "Use custom colors for your hitboxes!",
+  "version": 2.0,
+  "category": 2,
+  "author": "BugPlayZ",
+  "icon": "https://i.imgur.com/pZgaV6p.png"
+}
